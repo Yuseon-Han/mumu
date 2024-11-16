@@ -41,12 +41,12 @@ fun MainPage(mainViewModel: MainViewModel = viewModel()) {
         mainViewModel.loadUrl(null)
     }
     val dataModel by mainViewModel.dataModel.collectAsState()
-    val savedPage = rememberSaveable { mutableStateOf(0) }
+    val savedPage = rememberSaveable { mutableIntStateOf(0) }
 
     val pageCnt: Int = dataModel?.data?.size ?: 0
     val pagerState = rememberPagerState(pageCount = {
         pageCnt
-    }, initialPage = savedPage.value)
+    }, initialPage = savedPage.intValue)
 
     if (landingUrl != null) {
         WebViewScreen(url = landingUrl!!)
@@ -56,7 +56,7 @@ fun MainPage(mainViewModel: MainViewModel = viewModel()) {
         } else {
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.currentPage }.collect { page ->
-                    savedPage.value = page
+                    savedPage.intValue = page
                     mainViewModel.onPageChanged(page)
                 }
             }
@@ -91,7 +91,6 @@ fun MainPageTab(mainViewModel: MainViewModel = viewModel()) {
         WebViewScreen(url = landingUrl!!)
     } else {
         Column(modifier = Modifier.fillMaxSize()) {
-            // TabRow: 탭 컨테이너
             TabRow(selectedTabIndex = selectedTabIndex) {
                 tabTitles.forEachIndexed { index, title ->
                     Tab(
@@ -141,9 +140,7 @@ fun Page(pageData: Page?) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            Log.i("purin", "1")
             pageData.contents?.apply {
-                Log.i("purin", "2")
                 Content(this)
             }
         }

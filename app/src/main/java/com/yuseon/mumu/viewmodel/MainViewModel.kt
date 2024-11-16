@@ -23,14 +23,28 @@ class MainViewModel : ViewModel() {
 
     init {
         loadData()
-        initVisibleItemData()
+        initInnerStateData()
     }
 
-    private fun initVisibleItemData() {
+    private fun initInnerStateData() {
         _dataModel.value?.data?.forEach {
-            if (it.contents?.type == "GRID" || it.contents?.type == "STYLE") {
-                it.contents.displayItemCount = MutableStateFlow(6)
+            val content = it.contents
+            val contentType = content?.type
+
+            // for '더보기 '  todo. 모든 타입 반영
+            if (contentType == "GRID" || contentType == "STYLE") {
+                content.displayItemCount = MutableStateFlow(6)
             }
+
+            // for 'refresh'
+            if (contentType == "GRID") {
+                content.contentListState = MutableStateFlow(content.goods ?: emptyList())
+            }else if (contentType == "STYLE") {
+                content.contentListState = MutableStateFlow(content.styles ?: emptyList())
+            }else if (contentType == "SCROLL") {
+                content.contentListState = MutableStateFlow(content.goods ?: emptyList())
+            }
+
         }
     }
 
@@ -52,20 +66,30 @@ class MainViewModel : ViewModel() {
     fun onFooterClicked(type: String?) {
         // todo. make it enum
         if (type == "REFRESH") {
-
+            onRefreshClicked()
         } else if (type == "MORE") {
             onShowMoreClicked()
         }
     }
 
-    fun onShowMoreClicked() {
+    private fun onShowMoreClicked() {
         val index = _currPage
         val content = _dataModel.value?.data?.get(index)?.contents
         content ?: return
-        val stateFlow = _dataModel.value?.data?.get(index)?.contents?.displayItemCount
+        val stateFlow = content.displayItemCount
         stateFlow ?: return
 
         // todo. 최대값 제한하기
         stateFlow.value = stateFlow.value?.plus(3)
+    }
+
+    private fun onRefreshClicked() {
+        val index = _currPage
+        val content = _dataModel.value?.data?.get(index)?.contents
+        content ?: return
+        val stateFlow = content.contentListState
+        stateFlow ?: return
+
+        stateFlow.value = stateFlow.value.shuffled()
     }
 }

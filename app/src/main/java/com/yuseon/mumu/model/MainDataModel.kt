@@ -1,10 +1,9 @@
 package com.yuseon.mumu.model
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
-data class MainDataModel (
-    val data : List<Page>?
+data class MainDataModel(
+    val data: List<Page>?
 )
 
 data class Page(
@@ -31,7 +30,8 @@ data class Content(
     val goods: List<Good>?,
     val styles: List<Style>?,
     //show more 에 의해 보여지는 아이템 개수가 조절됨, null일 경우 showMore 동작 안함
-    var displayItemCount : MutableStateFlow<Int?>?
+    var displayItemCount: MutableStateFlow<Int?>? = null,
+    var contentListState: MutableStateFlow<List<Any>>? = null,
 )
 
 data class Banner(
@@ -43,15 +43,21 @@ data class Banner(
 )
 
 data class Good(
-    val linkURL: String?,
-    val thumbnailURL: String?,
-    val brandName: String?,
-    val price: Int?,
-    val saleRate: Int?,
-    val hasCoupon: Boolean?
+    val linkURL: String? = null,
+    val thumbnailURL: String? = null,
+    val brandName: String? = null,
+    val price: Int? = null,
+    val saleRate: Int? = null,
+    val hasCoupon: Boolean = false
 )
 
 data class Style(
     val linkURL: String?,
     val thumbnailURL: String?,
 )
+
+fun Style.toGood(): Good {
+    return Good(linkURL = this.linkURL, thumbnailURL = this.thumbnailURL)
+}
+
+
