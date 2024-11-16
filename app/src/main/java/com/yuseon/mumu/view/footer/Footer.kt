@@ -26,14 +26,14 @@ import com.yuseon.mumu.viewmodel.MainViewModel
 fun Footer(footerData: Footer, mainViewModel: MainViewModel = viewModel()) {
     Box(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(10.dp)
             .border(
-                width = 1.dp,                   // 테두리 두께
-                color = Color.LightGray,              // 테두리 색상
-                shape = RoundedCornerShape(30.dp) // 모서리 둥글기
+                width = 1.dp,
+                color = Color.LightGray,
+                shape = RoundedCornerShape(30.dp)
             )
-            .height(60.dp)
-            .padding(16.dp)
+            .height(50.dp)
+            .padding(8.dp)
             .fillMaxWidth()
             .clickable {
                 mainViewModel.onFooterClicked(footerData.type)

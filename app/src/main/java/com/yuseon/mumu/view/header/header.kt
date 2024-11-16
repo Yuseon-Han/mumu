@@ -25,7 +25,7 @@ fun Header(headerData: Header, mainViewModel: MainViewModel = viewModel()) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 8.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
@@ -51,12 +51,14 @@ fun Header(headerData: Header, mainViewModel: MainViewModel = viewModel()) {
         }
 
         headerData.linkURL?.apply {
-            Box(modifier = Modifier
-                .padding(start = 8.dp)
-                .clickable {
-                    mainViewModel.loadUrl(this)
-                },
-                contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .clickable {
+                        mainViewModel.loadUrl(this)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
                 Text(text = "전체")
             }
 

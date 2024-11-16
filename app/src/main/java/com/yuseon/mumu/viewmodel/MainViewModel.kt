@@ -23,7 +23,6 @@ class MainViewModel : ViewModel() {
 
     init {
         loadData()
-        initInnerStateData()
     }
 
     private fun initInnerStateData() {
@@ -37,12 +36,16 @@ class MainViewModel : ViewModel() {
             }
 
             // for 'refresh'
-            if (contentType == "GRID") {
-                content.contentListState = MutableStateFlow(content.goods ?: emptyList())
-            }else if (contentType == "STYLE") {
-                content.contentListState = MutableStateFlow(content.styles ?: emptyList())
-            }else if (contentType == "SCROLL") {
-                content.contentListState = MutableStateFlow(content.goods ?: emptyList())
+            when (contentType) {
+                "GRID" -> {
+                    content.contentListState = MutableStateFlow(content.goods ?: emptyList())
+                }
+                "STYLE" -> {
+                    content.contentListState = MutableStateFlow(content.styles ?: emptyList())
+                }
+                "SCROLL" -> {
+                    content.contentListState = MutableStateFlow(content.goods ?: emptyList())
+                }
             }
 
         }
@@ -50,8 +53,9 @@ class MainViewModel : ViewModel() {
 
     private fun loadData() {
         viewModelScope.launch {
-            val result = repo.getMockData()
+            val result = repo.getData()
             _dataModel.value = result
+            initInnerStateData()
         }
     }
 

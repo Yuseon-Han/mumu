@@ -1,29 +1,21 @@
 package com.yuseon.mumu.view
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.VerticalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,44 +25,6 @@ import com.yuseon.mumu.view.footer.Footer
 import com.yuseon.mumu.view.header.Header
 import com.yuseon.mumu.viewmodel.MainViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun MainPage(mainViewModel: MainViewModel = viewModel()) {
-    val landingUrl by mainViewModel.landingUrl.collectAsState()
-    BackHandler(enabled = landingUrl != null) {
-        mainViewModel.loadUrl(null)
-    }
-    val dataModel by mainViewModel.dataModel.collectAsState()
-    val savedPage = rememberSaveable { mutableIntStateOf(0) }
-
-    val pageCnt: Int = dataModel?.data?.size ?: 0
-    val pagerState = rememberPagerState(pageCount = {
-        pageCnt
-    }, initialPage = savedPage.intValue)
-
-    if (landingUrl != null) {
-        WebViewScreen(url = landingUrl!!)
-    } else {
-        if (dataModel == null) {
-            Text("loading")
-        } else {
-            LaunchedEffect(pagerState) {
-                snapshotFlow { pagerState.currentPage }.collect { page ->
-                    savedPage.intValue = page
-                    mainViewModel.onPageChanged(page)
-                }
-            }
-            VerticalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxSize()
-            ) { page ->
-                dataModel?.data?.get(page).apply {
-                    Page(this)
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun MainPageTab(mainViewModel: MainViewModel = viewModel()) {
@@ -80,11 +34,7 @@ fun MainPageTab(mainViewModel: MainViewModel = viewModel()) {
         mainViewModel.loadUrl(null)
     }
     val dataModel by mainViewModel.dataModel.collectAsState()
-
-    // 현재 선택된 탭 상태 관리
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-
-    // 탭 이름 리스트
     val tabTitles: List<String> = dataModel?.data?.map { it.contents?.type ?: "" } ?: emptyList()
 
     if (landingUrl != null) {
@@ -107,7 +57,7 @@ fun MainPageTab(mainViewModel: MainViewModel = viewModel()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(10.dp)
+                    .padding(7.dp)
             ) {
                 dataModel?.data?.get(selectedTabIndex).apply {
                     Page(this)

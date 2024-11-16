@@ -42,7 +42,7 @@ data class Banner(
     val keyword: String?,
 )
 
-data class Good(
+data class Good (
     val linkURL: String? = null,
     val thumbnailURL: String? = null,
     val brandName: String? = null,
