@@ -1,6 +1,8 @@
 package com.yuseon.mumu.viewmodel
 
-import android.util.Log
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yuseon.mumu.model.MainDataModel
@@ -17,9 +19,6 @@ class MainViewModel : ViewModel() {
 
     private val _dataModel: MutableStateFlow<MainDataModel?> = MutableStateFlow(null)
     val dataModel: StateFlow<MainDataModel?> = _dataModel.asStateFlow()
-
-    private val _landingRrl: MutableStateFlow<String?> = MutableStateFlow(null)
-    val landingUrl: StateFlow<String?> = _landingRrl.asStateFlow()
 
     init {
         loadData()
@@ -59,8 +58,9 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun loadUrl(url: String?) {
-        _landingRrl.value = url
+    fun loadUrl(context: Context, url: String?) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        context.startActivity(intent)
     }
 
     fun onPageChanged(page: Int) {

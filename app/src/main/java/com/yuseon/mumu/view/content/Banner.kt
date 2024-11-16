@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -93,9 +94,9 @@ fun Banner(bannerData: Banner?, mainViewModel: MainViewModel = viewModel()) {
                     }
                 }
             }
-
+            val context = LocalContext.current
             Box(modifier = Modifier.clickable {
-                mainViewModel.loadUrl(bannerData.linkURL)
+                mainViewModel.loadUrl(context, bannerData.linkURL)
             }) {
                 AsyncImage(
                     model = bannerData.thumbnailURL,

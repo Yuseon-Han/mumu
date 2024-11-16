@@ -1,6 +1,5 @@
 package com.yuseon.mumu.view
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,40 +27,31 @@ import com.yuseon.mumu.viewmodel.MainViewModel
 
 @Composable
 fun MainPageTab(mainViewModel: MainViewModel = viewModel()) {
-
-    val landingUrl by mainViewModel.landingUrl.collectAsState()
-    BackHandler(enabled = landingUrl != null) {
-        mainViewModel.loadUrl(null)
-    }
     val dataModel by mainViewModel.dataModel.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabTitles: List<String> = dataModel?.data?.map { it.contents?.type ?: "" } ?: emptyList()
 
-    if (landingUrl != null) {
-        WebViewScreen(url = landingUrl!!)
-    } else {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TabRow(selectedTabIndex = selectedTabIndex) {
-                tabTitles.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = {
-                            selectedTabIndex = index
-                            mainViewModel.onPageChanged(index)
-                        },
-                        text = { Text(title) }
-                    )
-                }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            tabTitles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = {
+                        selectedTabIndex = index
+                        mainViewModel.onPageChanged(index)
+                    },
+                    text = { Text(title) }
+                )
             }
+        }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(7.dp)
-            ) {
-                dataModel?.data?.get(selectedTabIndex).apply {
-                    Page(this)
-                }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(7.dp)
+        ) {
+            dataModel?.data?.get(selectedTabIndex).apply {
+                Page(this)
             }
         }
     }

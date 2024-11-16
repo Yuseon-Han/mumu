@@ -1,5 +1,7 @@
 package com.yuseon.mumu.view.header
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -50,12 +53,14 @@ fun Header(headerData: Header, mainViewModel: MainViewModel = viewModel()) {
             }
         }
 
+        val context = LocalContext.current
+
         headerData.linkURL?.apply {
             Box(
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .clickable {
-                        mainViewModel.loadUrl(this)
+                        mainViewModel.loadUrl(context, this)
                     },
                 contentAlignment = Alignment.Center
             ) {
