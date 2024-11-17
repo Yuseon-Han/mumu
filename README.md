@@ -1,15 +1,33 @@
 ## mumu
-mumu
+Musinsa Sample App
+- Using Android, Compose, Kotlin
 
+<br>
+<br>
 
 ## Build
-- Git source download
-- Android Build
+- download source code using right top menu <br>
+![image](https://github.com/user-attachments/assets/beb1b074-bdcd-40dc-b6ed-9cfc7cd16b76)
 
-or you can install directly rootDirectory/sampleApp.apk
+- Build
+```
+./gradlew assembleDebug
+```
+or you can use exist build output in rootDirectory/sampleApp.apk
+- Install
+```
+apk install -r 'file path'
+```
+
+<br>
+<br>
+
 
 ## ENV
 - minSdk = 24
+
+<br>
+<br>
 
 ## Preview
 ### Banner
