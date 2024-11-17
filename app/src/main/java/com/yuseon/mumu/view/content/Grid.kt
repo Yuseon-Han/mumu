@@ -1,5 +1,6 @@
 package com.yuseon.mumu.view.content
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,27 +10,47 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.yuseon.mumu.model.Content
 import com.yuseon.mumu.model.Good
 import com.yuseon.mumu.model.Style
 import com.yuseon.mumu.model.toGood
+import kotlinx.coroutines.launch
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Grid(contentData: Content, firstItemFocus: Boolean = false) {
     contentData.displayItemCount ?: return
     contentData.contentListState ?: return
 
-    // todo. count 변경됐을때 새 아이템으로 포커스
     val count by contentData.displayItemCount!!.collectAsState()
     val items by contentData.contentListState!!.collectAsState()
     val list = items.take(count ?: 0)
 
+    val gridState = rememberLazyGridState()
+    val coroutineScope = rememberCoroutineScope()
+    val prevCount = rememberSaveable {
+        mutableIntStateOf(count!!)
+    }
+
+    if (prevCount.intValue < count!!) {
+        coroutineScope.launch {
+            gridState.animateScrollToItem(count !! - (count!! - prevCount.intValue))
+        }
+    }
+
+    prevCount.intValue = count!!
+
     LazyVerticalGrid(
+        state = gridState,
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(GridItemGap),

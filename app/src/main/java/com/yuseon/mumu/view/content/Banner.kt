@@ -28,10 +28,11 @@ import coil.compose.AsyncImage
 import com.yuseon.mumu.model.Banner
 import com.yuseon.mumu.model.Content
 import com.yuseon.mumu.viewmodel.MainViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Banners(contentData: Content) {
+fun Banners(contentData: Content, viewModel: MainViewModel = viewModel()) {
     val savedPage = rememberSaveable { mutableIntStateOf(0) }
 
     val pageCnt: Int = contentData.banners?.size ?: 0
@@ -40,6 +41,9 @@ fun Banners(contentData: Content) {
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             savedPage.intValue = page
+            delay(3000)
+            val nextPage = (pagerState.currentPage + 1) % pageCnt
+            pagerState.animateScrollToPage(nextPage)
         }
     }
 

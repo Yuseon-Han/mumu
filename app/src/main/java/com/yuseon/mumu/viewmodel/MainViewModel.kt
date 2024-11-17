@@ -3,6 +3,7 @@ package com.yuseon.mumu.viewmodel
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yuseon.mumu.model.MainDataModel
@@ -11,9 +12,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 class MainViewModel : ViewModel() {
-    val repo: Repository = Repository()
+    private val repo: Repository = Repository()
 
     private var _currPage: Int = 0
 
@@ -39,9 +41,11 @@ class MainViewModel : ViewModel() {
                 "GRID" -> {
                     content.contentListState = MutableStateFlow(content.goods ?: emptyList())
                 }
+
                 "STYLE" -> {
                     content.contentListState = MutableStateFlow(content.styles ?: emptyList())
                 }
+
                 "SCROLL" -> {
                     content.contentListState = MutableStateFlow(content.goods ?: emptyList())
                 }
@@ -83,8 +87,7 @@ class MainViewModel : ViewModel() {
         val stateFlow = content.displayItemCount
         stateFlow ?: return
 
-        // todo. 최대값 제한하기
-        stateFlow.value = stateFlow.value?.plus(3)
+        stateFlow.value = min(stateFlow.value?.plus(3) ?: 0, content.itemCount() ?: 0)
     }
 
     private fun onRefreshClicked() {

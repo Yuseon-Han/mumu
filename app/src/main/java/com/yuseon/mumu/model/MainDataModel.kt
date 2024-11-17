@@ -32,7 +32,25 @@ data class Content(
     //show more 에 의해 보여지는 아이템 개수가 조절됨, null일 경우 showMore 동작 안함
     var displayItemCount: MutableStateFlow<Int?>? = null,
     var contentListState: MutableStateFlow<List<Any>>? = null,
-)
+) {
+    fun itemCount(): Int? {
+        when (type) {
+            "BANNER" -> {
+                return banners?.size
+            }
+
+            "GRID", "SCROLL" -> {
+                return goods?.size
+            }
+
+            "STYLE" -> {
+                return styles?.size
+            }
+
+            else -> return null
+        }
+    }
+}
 
 data class Banner(
     val linkURL: String?,
@@ -42,7 +60,7 @@ data class Banner(
     val keyword: String?,
 )
 
-data class Good (
+data class Good(
     val linkURL: String? = null,
     val thumbnailURL: String? = null,
     val brandName: String? = null,

@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,16 +18,21 @@ import androidx.compose.ui.unit.dp
 import com.yuseon.mumu.model.Content
 import com.yuseon.mumu.model.Good
 import com.yuseon.mumu.view.content.ContentItem
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Scroll(contentData: Content) {
     if (contentData.contentListState == null) return
-
     val scrollState = rememberScrollState()
-
     val goods by contentData.contentListState!!.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
-    //todo. goods 리스트 새로고침 됐을때 첫번째로 포커스
+    // 새로 고침 됐을때 맨앞으로 스크롤
+    coroutineScope.launch {
+        scrollState.scrollTo(0)
+    }
+
     Row(
         modifier = Modifier
             .horizontalScroll(scrollState)
