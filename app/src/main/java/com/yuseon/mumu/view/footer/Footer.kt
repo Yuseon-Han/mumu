@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,37 +26,41 @@ import com.yuseon.mumu.viewmodel.MainViewModel
 
 @Composable
 fun Footer(footerData: Footer, mainViewModel: MainViewModel = viewModel()) {
-    Box(
-        modifier = Modifier
-            .padding(10.dp)
-            .border(
-                width = 1.dp,
-                color = Color.LightGray,
-                shape = RoundedCornerShape(30.dp)
-            )
-            .height(50.dp)
-            .padding(8.dp)
-            .fillMaxWidth()
-            .clickable {
-                mainViewModel.onFooterClicked(footerData.type)
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier, verticalAlignment = Alignment.CenterVertically
-        ) {
-            footerData.iconURL?.apply {
-                AsyncImage(
-                    modifier = Modifier
-                        .padding(end = 5.dp)
-                        .size(20.dp),
-                    model = this,
-                    contentDescription = "Footer title Icon",
-                    contentScale = ContentScale.Fit
-                )
-            }
-            Text(text = footerData.title ?: "", style = MaterialTheme.typography.bodyLarge)
-        }
+    footerData.visibility ?: return
 
+    val visibility by footerData.visibility!!.collectAsState()
+    if (visibility) {
+        Box(
+            modifier = Modifier
+                .padding(10.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.LightGray,
+                    shape = RoundedCornerShape(30.dp)
+                )
+                .height(50.dp)
+                .padding(8.dp)
+                .fillMaxWidth()
+                .clickable {
+                    mainViewModel.onFooterClicked(footerData.type)
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier, verticalAlignment = Alignment.CenterVertically
+            ) {
+                footerData.iconURL?.apply {
+                    AsyncImage(
+                        modifier = Modifier
+                            .padding(end = 5.dp)
+                            .size(20.dp),
+                        model = this,
+                        contentDescription = "Footer title Icon",
+                        contentScale = ContentScale.Fit
+                    )
+                }
+                Text(text = footerData.title ?: "", style = MaterialTheme.typography.bodyLarge)
+            }
+        }
     }
 }

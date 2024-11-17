@@ -1,5 +1,7 @@
 package com.yuseon.mumu.model
 
+
+//todo. DTO 와 VO 분리
 import kotlinx.coroutines.flow.MutableStateFlow
 
 data class MainDataModel(
@@ -22,6 +24,7 @@ data class Footer(
     val title: String?,
     val iconURL: String?,
     val type: String?,
+    var visibility: MutableStateFlow<Boolean>? = null,
 )
 
 data class Content(

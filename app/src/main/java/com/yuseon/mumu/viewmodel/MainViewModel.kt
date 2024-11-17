@@ -3,7 +3,6 @@ package com.yuseon.mumu.viewmodel
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yuseon.mumu.model.MainDataModel
@@ -51,6 +50,10 @@ class MainViewModel : ViewModel() {
                 }
             }
 
+            if (it.footer != null) {
+                it.footer.visibility = MutableStateFlow(true)
+            }
+
         }
     }
 
@@ -82,12 +85,16 @@ class MainViewModel : ViewModel() {
 
     private fun onShowMoreClicked() {
         val index = _currPage
-        val content = _dataModel.value?.data?.get(index)?.contents
+        val model = _dataModel.value?.data?.get(index)
+        val content = model?.contents
         content ?: return
         val stateFlow = content.displayItemCount
         stateFlow ?: return
 
         stateFlow.value = min(stateFlow.value?.plus(3) ?: 0, content.itemCount() ?: 0)
+        if (stateFlow.value!! >= (content.itemCount() ?: 0)) {
+            model.footer?.visibility?.value = false
+        }
     }
 
     private fun onRefreshClicked() {
