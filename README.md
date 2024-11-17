@@ -4,16 +4,16 @@ Musinsa Sample App
 <br>
 <br>
 
-## Build
+## Build and Install
 - download source code using right top menu <br>
 ![image](https://github.com/user-attachments/assets/beb1b074-bdcd-40dc-b6ed-9cfc7cd16b76)
 
-- Build
+- build apk
 ```
 ./gradlew assembleDebug
 ```
 or you can use exist build output in rootDirectory/sampleApp.apk
-- Install
+- install apk 
 ```
 adb install -r 'file path'
 ```
