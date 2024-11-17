@@ -1,4 +1,3 @@
-## mumu
 Musinsa Sample App
 - Using Android, Compose, Kotlin
 
@@ -23,8 +22,8 @@ adb install -r 'file path'
 <br>
 
 
-## ENV
-- minSdk = 24
+## Environment
+- Android minimu Sdk version 24
 
 <br>
 <br>
