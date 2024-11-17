@@ -16,7 +16,7 @@ Musinsa Sample App
 or you can use exist build output in rootDirectory/sampleApp.apk
 - Install
 ```
-apk install -r 'file path'
+adb install -r 'file path'
 ```
 
 <br>
