@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yuseon.mumu.model.MainDataModel
 import com.yuseon.mumu.model.Repository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,8 @@ class MainViewModel : ViewModel() {
 
     private val _dataModel: MutableStateFlow<MainDataModel?> = MutableStateFlow(null)
     val dataModel: StateFlow<MainDataModel?> = _dataModel.asStateFlow()
+
+    private var _job : Job? = null
 
     init {
         loadData()
@@ -58,11 +61,16 @@ class MainViewModel : ViewModel() {
     }
 
     private fun loadData() {
-        viewModelScope.launch {
+        _job = viewModelScope.launch {
             val result = repo.getData()
             _dataModel.value = result
             initInnerStateData()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        _job?.cancel()
     }
 
     fun loadUrl(context: Context, url: String?) {
